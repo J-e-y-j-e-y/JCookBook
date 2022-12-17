@@ -3,9 +3,11 @@ package network.streams;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class StreamFunctions {
@@ -35,6 +37,12 @@ public class StreamFunctions {
 
         streamReduceExample1();
         System.out.println("----------------------------------");
+
+        streamCollect();
+        System.out.println("-----------------------------------");
+
+        streamToCollection();
+        System.out.println("-----------------------------------");
     }
 
     public static void streamPeek(){
@@ -150,7 +158,7 @@ public class StreamFunctions {
         System.out.println();
     }
 
-    public class Thing {
+    public static class Thing {
         private int someInt;
         public Thing(int i) { this.someInt = i; }
         public int getSomeInt() { return someInt; }
@@ -159,6 +167,25 @@ public class StreamFunctions {
     }
 
     public static void streamCollect(){
+        double aa = Stream.of(1,2,3).map(Thing::new)
+                .collect(Collectors.averagingInt(Thing::getSomeInt));
+        System.out.println("stream(1,2,3).averagingInt(): " + aa);
+        String as = Stream.of(1,2,3).map(Thing::new).map(Thing::getSomeStr)
+                .collect(Collectors.joining(","));
+        System.out.println("stream(1,2,3).joining(,): " + as);
+        String ss = Stream.of(1,2,3).map(Thing::new).map(Thing::getSomeStr)
+                .collect(Collectors.joining(",", "[", "]"));
+        System.out.println("stream(1,2,3).joining(,[,]): " + ss);
+    }
+
+    public static void streamToCollection(){
+        Object[] os = Stream.of(1,2,3).toArray();
+        Arrays.stream(os).forEach(System.out::print);
+        System.out.println();
+        String[] sts = Stream.of(1,2,3)
+                .map(i -> i.toString())
+                .toArray(String[]::new);
+        Arrays.stream(sts).forEach(System.out::print);
 
     }
 }
