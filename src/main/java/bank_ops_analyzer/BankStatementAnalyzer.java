@@ -23,10 +23,20 @@ public class BankStatementAnalyzer {
 
     private void collectSummary(BankStatementProcessor bankStatementProcessor){
 
-        System.out.println("Total for all transactions = " + bankStatementProcessor.calculateTotalAmount());
+        System.out.println("Total for all transactions = " + bankStatementProcessor.summarizeTransactions(((accumulator, bt) -> accumulator + bt.getAmount())));
 
-        System.out.println("Transactions in January " + bankStatementProcessor.selectInMonth(Month.JANUARY));
+        System.out.println("Transactions in January " + bankStatementProcessor.findTransactions(bt -> bt.getLd().getMonth() == Month.FEBRUARY));
 
         System.out.println("Total salary " + bankStatementProcessor.calculateTotalForCategory("Salary"));
+
+        BankTransactionFilter filter = new BankTransactionIsInFebruaryAndExpensive();
+        List<BankTransaction> transactionsFebAndTotalGE1000 = bankStatementProcessor.findTransactions(filter);
+        System.out.println("Transactions made in February and total >= 1000 " + transactionsFebAndTotalGE1000);
+
+
+        List<BankTransaction> transactionsMarchAndCinema = bankStatementProcessor.findTransactions(bt ->
+                            bt.getLd().getMonth() == Month.MARCH
+                            && bt.getDescription().equals("Cinema"));
+        System.out.println("Transactions made in March and category = 'Cinema' " + transactionsMarchAndCinema);
     }
 }

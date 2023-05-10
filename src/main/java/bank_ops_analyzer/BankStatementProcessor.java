@@ -10,31 +10,27 @@ import java.util.List;
 public class BankStatementProcessor {
     private List<BankTransaction> bankTransactions;
 
-    public double calculateTotalAmount(){
+    public double summarizeTransactions(BankTransactionSummarizer summarizer){
         double total = 0;
         for(BankTransaction bt : bankTransactions){
-            total += bt.getAmount();
+            total += summarizer.summarize(total, bt);
         }
         return total;
-    }
-
-    public List<BankTransaction> selectInMonth(Month month){
-        List<BankTransaction> selected = new ArrayList<>();
-
-        for(BankTransaction bt : bankTransactions){
-            if(month.equals(bt.getLd().getMonth()))
-                selected.add(bt);
-        }
-
-        return selected;
     }
 
     public double calculateTotalForCategory(String category){
-        double total = 0;
+        return summarizeTransactions(((accumulator, bt) ->
+                                    bt.getDescription().equals(category) ?
+                                    accumulator + bt.getAmount() : accumulator));
+    }
+
+    public List<BankTransaction> findTransactions(BankTransactionFilter filter){
+        List<BankTransaction> found = new ArrayList<>();
+
         for(BankTransaction bt : bankTransactions){
-            if(category.equals(bt.getDescription()))
-                total += bt.getAmount();
+            if(filter.test(bt))
+                found.add(bt);
         }
-        return total;
+        return found;
     }
 }
