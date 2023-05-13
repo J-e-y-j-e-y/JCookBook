@@ -11,4 +11,8 @@ public class Document {
     Document(Map<String, String> attributes){
         this.attributes = attributes;
     }
+
+    String getAttribute(String attributeName){
+        return attributes.get(attributeName);
+    }
 }

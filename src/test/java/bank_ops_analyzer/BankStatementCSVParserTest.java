@@ -1,3 +1,5 @@
+package bank_ops_analyzer;
+
 import bank_ops_analyzer.BankStatementCSVParser;
 import bank_ops_analyzer.BankStatementParser;
 import bank_ops_analyzer.BankTransaction;
